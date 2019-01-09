@@ -137,8 +137,8 @@ for file in os.listdir('data'):
         next(csv_reader)
         for line in csv_reader:
             if len(line) > 2:
-                if (line[2].lower() == 'call' and line[3] > line[1]) or (
-                        line[2].lower() == 'put' and line[3] < line[1]):  # for otm calls and puts
+                if (line[2].lower() == 'call' and float(line[3]) > float(line[1])) or (
+                        line[2].lower() == 'put' and float(line[3]) < float(line[1])):  # for otm calls and puts
                     mdy_list = line[4].split('/')
                     date = datetime.date(int(mdy_list[2]) + 2000, int(mdy_list[0]), int(mdy_list[1])) # +2000 because years are just listed as 19 or 20 in the csv
                     if date > datetime.date.today():
