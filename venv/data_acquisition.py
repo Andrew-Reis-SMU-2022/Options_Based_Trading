@@ -4,6 +4,7 @@ import os
 import csv
 import datetime
 import xlsxwriter
+from iexfinance.stocks import Stock
 
 workbook = xlsxwriter.Workbook('output/output.xlsx')
 
@@ -83,6 +84,10 @@ def get_current_stock_price(ticker):
         price = price.replace(',', '')
     return float(price)
 
+def get_current_stock_price2(ticker):
+    price = Stock(ticket)
+    stockPrice = price.get_price()
+    return float(stockPrice)
 
 class ExpDate:
     def __init__(self, exp_date):
