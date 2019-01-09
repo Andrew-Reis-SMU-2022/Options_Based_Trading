@@ -1,5 +1,3 @@
-from bs4 import BeautifulSoup
-import requests
 import os
 import csv
 import datetime
@@ -74,20 +72,11 @@ def write_to_raw_excel(stocks_list):
 
 
 def get_current_stock_price(ticker):
-    price = None
-    while price == None:
-        url = f"https://finance.yahoo.com/quote/{ticker}/"
-        website_source = requests.get(url).text
-        soup = BeautifulSoup(website_source, 'lxml')
-        price = soup.find('span', 'Trsdu(0.3s) Trsdu(0.3s) Fw(b) Fz(36px) Mb(-4px) D(b)').text
-    if ',' in price:
-        price = price.replace(',', '')
-    return float(price)
-
-def get_current_stock_price2(ticker):
-    price = Stock(ticket)
+    print(ticker)
+    price = Stock(ticker)
     stockPrice = price.get_price()
     return float(stockPrice)
+
 
 class ExpDate:
     def __init__(self, exp_date):
@@ -121,7 +110,7 @@ class ExpDate:
             self.total_money_traded += option.total_cost
 
 
-class Stock:
+class __Stock:
     def __init__(self, ticker):
         self.ticker = ticker
         self.price = get_current_stock_price(ticker)
@@ -156,7 +145,7 @@ for file in os.listdir('data'):
                         option = OptionTrade(line[0], float(line[3]), date, float(line[9]), int(line[10]),
                                              line[2].lower())
                         if not option.ticker in stocks_dict:
-                            stocks_dict[option.ticker] = Stock(option.ticker)
+                            stocks_dict[option.ticker] = __Stock(option.ticker)
                         list_exp_dates = []
                         for exp_date_obj in stocks_dict[option.ticker].exp_dates:
                             list_exp_dates.append(exp_date_obj.exp_date)
