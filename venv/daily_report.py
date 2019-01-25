@@ -93,46 +93,6 @@ def write_to_highlighted_trades(options_list):
         row += 1
 
 
-def write_to_raw_excel(stocks_list):
-    worksheet = workbook.add_worksheet('Raw Data For Manipulation')
-
-    worksheet.write(0, 0, "Ticker")
-    worksheet.write(0, 1, "Current Price")
-    worksheet.write(0, 2, "Expiration Date")
-    worksheet.write(0, 3, "Predicted Price")
-    worksheet.write(0, 4, "Percent Change")
-    worksheet.write(0, 5, "Volume")
-    worksheet.write(0, 6, "Total Money Traded")
-    worksheet.write(0, 7, "Number of Option Trades")
-    worksheet.write(0, 8, "Call Trades")
-    worksheet.write(0, 9, "Call Volume")
-    worksheet.write(0, 10, "Call Money")
-    worksheet.write(0, 11, "Put Trades")
-    worksheet.write(0, 12, "Put Volume")
-    worksheet.write(0, 13, "Put Money")
-
-    row = 1
-
-    for stock in stocks_list:
-        for exp_date_obj in stock.exp_dates:
-            worksheet.write(row, 0, f'${stock.ticker}')
-            worksheet.write(row, 1, stock.price)
-            worksheet.write(row, 2,
-                            f'{exp_date_obj.exp_date.month}/{exp_date_obj.exp_date.day}/{exp_date_obj.exp_date.year}')
-            worksheet.write(row, 3, exp_date_obj.predicted_price)
-            worksheet.write(row, 4, exp_date_obj.percent_change)
-            worksheet.write(row, 5, exp_date_obj.total_volume)
-            worksheet.write(row, 6, exp_date_obj.total_money_traded)
-            worksheet.write(row, 7, exp_date_obj.num_of_option_trades)
-            worksheet.write(row, 8, exp_date_obj.num_of_calls)
-            worksheet.write(row, 9, exp_date_obj.call_volume)
-            worksheet.write(row, 10, exp_date_obj.money_in_calls)
-            worksheet.write(row, 11, exp_date_obj.num_of_puts)
-            worksheet.write(row, 12, exp_date_obj.put_volume)
-            worksheet.write(row, 13, exp_date_obj.money_in_puts)
-            row += 1
-
-
 def write_to_individual_trades(stocks_list):
     worksheet = workbook.add_worksheet("Individual Option Trades")
     worksheet.write(0, 0, "Ticker/Expiration Date")
@@ -343,7 +303,6 @@ for file in os.listdir('data'):
                             elif option.type == 'put':
                                 exp_date_obj.num_of_puts += 1
                             exp_date_obj.num_of_option_trades += 1
-
 
 def sorting_exp_dates(exp_date_obj):
     return exp_date_obj.exp_date
