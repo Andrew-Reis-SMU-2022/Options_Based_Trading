@@ -4,7 +4,6 @@ import datetime
 import xlsxwriter
 from iexfinance.stocks import Stock
 
-
 workbook = xlsxwriter.Workbook('output/output.xlsx')
 
 def write_to_formated_excel(stocks_list, sheet_name):
@@ -72,6 +71,7 @@ def write_to_highlighted_trades(options_list):
     worksheet.write(0, 7, "Volume")
     worksheet.write(0, 8, "Total Price Paid")
     worksheet.write(0, 9, "Vol/OI")
+    worksheet.write(0, 10, "Purchase Date")
 
     row = 1
     for option in options_list:
@@ -89,6 +89,7 @@ def write_to_highlighted_trades(options_list):
         worksheet.write(row, 7, option.volume)
         worksheet.write(row, 8, option.total_cost)
         worksheet.write(row, 9, option.vol_oi)
+        worksheet.write(row, 10, f'{option.purchase_date.month}/{option.purchase_date.day}/{option.purchase_date.year}')
 
         row += 1
 
@@ -103,6 +104,7 @@ def write_to_individual_trades(stocks_list):
     worksheet.write(0, 5, "Volume")
     worksheet.write(0, 6, "Total Price Paid")
     worksheet.write(0, 7, "Vol/OI")
+    worksheet.write(0, 8, "Purchase Date")
 
     row = 1
 
@@ -122,6 +124,8 @@ def write_to_individual_trades(stocks_list):
                 worksheet.write(row, 5, option.volume)
                 worksheet.write(row, 6, '${:,.2f}'.format(option.total_cost))
                 worksheet.write(row, 7, '{:.3f}'.format(option.vol_oi))
+                worksheet.write(row, 8,
+                                f'{option.purchase_date.month}/{option.purchase_date.day}/{option.purchase_date.year}')
                 row += 1
 
         if len(stock.list_of_puts) > 0:
@@ -136,6 +140,8 @@ def write_to_individual_trades(stocks_list):
                 worksheet.write(row, 5, option.volume)
                 worksheet.write(row, 6, '${:,.2f}'.format(option.total_cost))
                 worksheet.write(row, 7, '{:.3f}'.format(option.vol_oi))
+                worksheet.write(row, 8,
+                                f'{option.purchase_date.month}/{option.purchase_date.day}/{option.purchase_date.year}')
                 row += 1
         row += 1
 
@@ -208,6 +214,7 @@ class __Stock:
         self.price = get_current_stock_price(ticker)
         self.exp_dates = []
 
+
     def construct_option_list(self):
         self.list_of_calls = []
         self.list_of_puts = []
@@ -257,7 +264,7 @@ class __Stock:
 
 
 class OptionTrade:
-    def __init__(self, ticker, strike, exp_date, last, volume, type, open_int):
+    def __init__(self, ticker, strike, exp_date, last, volume, type, open_int, purchase_date):
         self.ticker = ticker
         self.strike = strike
         self.exp_date = exp_date
@@ -267,6 +274,7 @@ class OptionTrade:
         self.type = type
         self.open_int = open_int
         self.vol_oi = float(volume / open_int)
+        self.purchase_date = purchase_date
         if self.type == 'call':
             self.break_even = strike + last
         if self.type == 'put':
@@ -279,6 +287,10 @@ start = datetime.datetime.now()  # For Optimization Purposes
 stocks_dict = {}
 for file in os.listdir('data'):
     with open(f"data/{file}", 'r') as csv_file:
+
+        title_splits = file.split('-')
+        purchase_date = datetime.date(int(title_splits[6].split('.')[0]), int(title_splits[4]), int(title_splits[5]))
+
         csv_reader = csv.reader(csv_file)
         next(csv_reader)
         for line in csv_reader:
@@ -287,7 +299,7 @@ for file in os.listdir('data'):
                 date = datetime.date(int(mdy_list[2]) + 2000, int(mdy_list[0]), int(mdy_list[1])) # +2000 because years are just listed as 19 or 20 in the csv
                 if date > datetime.date.today():
                     option = OptionTrade(line[0], float(line[3]), date, float(line[9]), int(line[10]),
-                                            line[2].lower(), int(line[11]))
+                                            line[2].lower(), int(line[11]), purchase_date)
                     if not option.ticker in stocks_dict:
                         stocks_dict[option.ticker] = __Stock(option.ticker)
                     list_exp_dates = []
@@ -303,6 +315,7 @@ for file in os.listdir('data'):
                             elif option.type == 'put':
                                 exp_date_obj.num_of_puts += 1
                             exp_date_obj.num_of_option_trades += 1
+
 
 def sorting_exp_dates(exp_date_obj):
     return exp_date_obj.exp_date
