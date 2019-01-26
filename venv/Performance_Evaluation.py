@@ -143,7 +143,7 @@ def sort_by_consensus_money(stock):
 
 consensus_stocks = sorted(consensus_stocks, key=sort_by_consensus_money, reverse=True)
 
-out_dict = {'Ticker': [], 'Type': [], 'WA Beginning Stock Price': [], 'Final Stock Price': [], 'Percent Chagne': [],
+out_dict = {'Ticker': [], 'Type': [], 'WA Beginning Stock Price': [], 'Final Stock Price': [], 'Percent Change': [],
             'WA Strike': [], 'Consensus Volume': [], 'Initial Investment': [], 'Profit': [], 'ROI': []}
 
 for stock in consensus_stocks:
