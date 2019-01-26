@@ -151,7 +151,7 @@ for stock in consensus_stocks:
     out_dict['Type'].append(stock.consensus_type)
     out_dict['WA Beginning Stock Price'].append(stock.WA_stock_beginning_price)
     out_dict['Final Stock Price'].append(stock.price)
-    out_dict['Percent Chagne'].append((stock.price - stock.WA_stock_beginning_price) / stock.WA_stock_beginning_price)
+    out_dict['Percent Change'].append((stock.price - stock.WA_stock_beginning_price) / stock.WA_stock_beginning_price)
     out_dict['WA Strike'].append(stock.WA_strike)
     if stock.consensus_type == 'Call':
         out_dict['Consensus Volume'].append(stock.call_volume)
