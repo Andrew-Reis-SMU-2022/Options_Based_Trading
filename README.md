@@ -17,3 +17,9 @@ Place the same csv files as the daily and weekly reports and place it in a folde
 For Credit_spreads_daily:
 The two folders you will use are ‘spread_data’ and ‘spread_output’. They work in the same fashion as the previous folders.
 
+
+The program takes any number of .csv files in the data folder, extracts the data from them, and outputs data to an excel file called output in the output folder.
+
+
+source of information: https://www.barchart.com/options/unusual-activity/stocks
+

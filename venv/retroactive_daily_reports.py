@@ -5,7 +5,12 @@ import xlsxwriter
 from iexfinance.stocks import Stock
 from iexfinance.stocks import get_historical_data
 
-workbook = xlsxwriter.Workbook('output/output.xlsx')
+try:
+    workbook = xlsxwriter.Workbook('output/output.xlsx')
+except:
+    f=open("output/output.xlsx","w+")
+    f.close()
+    workbook = xlsxwriter.Workbook('output/output.xlsx')
 
 def write_to_formated_excel(stocks_list, sheet_name):
     worksheet = workbook.add_worksheet(sheet_name)
